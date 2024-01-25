@@ -1,0 +1,1 @@
+Currently removes numbering found in Anbernic rom collections. Finds and renames files by extension in a target directory. 
