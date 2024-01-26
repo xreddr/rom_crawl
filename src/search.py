@@ -1,4 +1,4 @@
-import os, json
+import os, json, shutil
 
 def debug():
     dir = '/media/xreddr/Lexar/EmuPulls/SNES'
@@ -13,26 +13,6 @@ def debug():
     s1.search()
     if s1.found:
         remove_numbering(s1.found)
-        # for dir in s1.found:
-        #     for file in s1.found[dir]:
-        #         exlist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ']
-        #         newname = file
-        #         while newname[0] in exlist:
-        #             newname = newname[1:]
-                
-        #         old_file = os.path.join(dir, file)
-        #         new_file = os.path.join(dir, newname)
-        #         if os.path.exists(old_file) and new_file != old_file:
-        #             os.rename(old_file, new_file)
-        #             print('REACH')
-        #             if os.path.exists(new_file):
-        #                 print(f'{old_file} has been renamed to {new_file}')
-
-                # print(old_file)
-                # print(new_file)
-            # print(json.dumps(s1.found[dir], indent=2))
-                    
-        # print(json.dumps(s1.found, indent=2))
     else:
         print('Nothing found.')
 
@@ -52,7 +32,6 @@ class Scanner:
                     if key not in found:
                         found.update({key:[]})
                     found[key].append(file)
-                    # found.update(list(found[f'{(os.path.dirname(os.path.join(root, file)))}']).append(file))
         self.found = found
 
 
@@ -60,7 +39,7 @@ def remove_numbering(found):
     '''Takes dict of lists'''
     for dir in found:
         for file in found[dir]:
-            exlist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ']
+            exlist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '.']
             newname = file
             while newname[0] in exlist:
                 newname = newname[1:]
@@ -70,6 +49,14 @@ def remove_numbering(found):
                 os.rename(old_file, new_file)
                 if os.path.exists(new_file):
                     print(f'{old_file} has been renamed to {new_file}')
+
+def copy_file(found, target):
+    for dir in found:
+        for file in found[dir]:
+            exlist = ['(U)']
+            src = os.path.join(dir, file)
+            dst = os.path.join(target, file)
+            shutil.copyfile(src, dst)
 
 if __name__ == "__main__":
     debug()
