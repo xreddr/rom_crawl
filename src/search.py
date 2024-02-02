@@ -1,4 +1,5 @@
 import os, json, shutil
+import jfs
 
 def debug():
     dir = '/media/xreddr/Lexar/EmuPulls/SNES'
@@ -12,7 +13,7 @@ def debug():
     s1 = Scanner(dir, ext)
     s1.search()
     if s1.found:
-        remove_numbering(s1.found)
+        remove_brackets(s1.found)
     else:
         print('Nothing found.')
 
@@ -49,6 +50,19 @@ def remove_numbering(found):
                 os.rename(old_file, new_file)
                 if os.path.exists(new_file):
                     print(f'{old_file} has been renamed to {new_file}')
+
+def remove_brackets(found):
+    rev = {}
+    for dir in found:
+        rev.update({dir : found[dir]})
+        for file in found[dir]:
+            print(file)
+            newname = jfs.remove_text_inside_brackets(file)
+            print(newname)
+            rev[dir] = [sub.replace(f'{file}', f'{newname}') for sub in rev[dir]]
+    print(json.dumps(found, indent=2))
+    print(json.dumps(rev, indent=2))
+    return rev
 
 def copy_file(found, target):
     for dir in found:

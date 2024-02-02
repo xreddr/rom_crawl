@@ -63,6 +63,7 @@ def rename(found):
     valid = raw.lower()
     if valid == '1':
         src.search.remove_numbering(found)
+        print('Numbering removed from file names.')
     elif valid == '2':
         print("In development")
     elif valid == '3':
