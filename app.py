@@ -1,19 +1,59 @@
 import src
+import os
+import json
+from config import config
+
+
+data_object = {
+    'source' : {
+        'raw' : "",
+        'edit' : {}
+    },
+    'destination' : {
+        'raw' : "",
+        'edit' : {}
+    }
+}
+
+
+class Crawl:
+    def __init__(self, data):
+        self.data = data
+
+
+# App enters here
 
 def main():
-    crawl = None
+    crawl = Crawl("None")
     selection = None
     while selection == None:
+        # User input selection
+        selections = ['Build', 'Crawl', 'Quit']
+        options = ""
+        for option in selections:
+            options = options + f"{int(selections.index(option))+1}) {option} "
+        print(f'Crawl data: {crawl.data}')
+        print(options)
+        raw_selection = input("Please choose a option number:")
+        selection = selections[int(raw_selection)-1].lower()
 
-        selection = welcome()
-
-        if selection == 'find':
-            crawl = find()
+        if selection == 'build':
+            build_dirs()
             selection = None
 
             continue
 
-        if selection == 'name':
+        elif selection == 'crawl':
+            crawl.data = find()
+            selection = None
+
+            continue
+
+        elif selection == 'quit':
+            print("Goodbye")
+            exit()
+
+        if selection == 'rename':
             if crawl:
                 rename(crawl)
             else:
@@ -23,29 +63,41 @@ def main():
             continue
             
 
-def welcome():
-    '''Returns string.'''
-    selection = None
-    while selection == None:
-        print("Welcome to Rom Crawl\n1) Find\n2) Rename\n3) Copy\n4) Organize\n5) Manage")
-        raw = input("Please select an option: ")
-        valid = raw.lower()
-        if valid == '1':
-            selection = 'find'
-        elif valid == '2':
-            selection = 'name'
-        elif valid == '3':
-            selection = 'copy'
-        elif valid == '4':
-            selection = 'org'
-        elif valid == '5':
-            selection = 'mng'
+def build_dirs():
+    raw = input("Absolute path or type 'back': ")
+    if raw == 'back':
+        return
+    else:
+        build_path = raw +"/"+"Rom Library"
 
-        return selection
+    print(build_path)
+    try:
+        os.makedirs(build_path)
+    except OSError:
+        pass
+
+    for key in config.rom_groups.keys():
+        print(key)
+        try:
+            os.makedirs(build_path+'/'+str(key))
+        except OSError:
+            pass
+    
+    return
     
 def find():
     '''Returns dictionary of lists.'''
     dir = None
+    favorites = ["/media/xreddr/7C9C-465F", "/media/xreddr/Lexar/EmuPulls"]
+    for i in range(len(favorites)):
+        print(i, end=' )')
+        print(favorites[i])
+    select_fav = input('Select favorite?')
+    if select_fav == '':
+        pass
+    elif favorites[int(select_fav)]:
+        dir = favorites[int(select_fav)]
+    
     ext = None
     while dir == None:
         dir = input("Input absolute path:")
@@ -54,6 +106,7 @@ def find():
 
     s1 = src.search.Scanner(dir, ext)
     s1.search()
+    print(json.dumps(s1.found, indent=2))
 
     return s1.found
 

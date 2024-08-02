@@ -1,5 +1,6 @@
 import os, json, shutil
-import jfs
+from . import jfs
+from config import config
 
 def debug():
     dir = '/media/xreddr/Lexar/EmuPulls/SNES'
@@ -28,11 +29,12 @@ class Scanner:
         found = {}
         for root, dirs, files in os.walk(self.dir):
             for file in files:
-                if file.endswith(self.ext):
-                    key = os.path.dirname(os.path.join(root, file))
-                    if key not in found:
-                        found.update({key:[]})
-                    found[key].append(file)
+                for ext in config.rom_groups['SNES']: # Hard coded
+                    if file.endswith(ext):
+                        key = os.path.dirname(os.path.join(root, file))
+                        if key not in found:
+                            found.update({key:[]})
+                        found[key].append(file)
         self.found = found
 
 
