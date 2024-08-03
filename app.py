@@ -28,7 +28,7 @@ def main():
     selection = None
     while selection == None:
         # User input selection
-        selections = ['Build', 'Crawl', 'Quit']
+        selections = ['Settings', 'Crawl', 'Quit']
         options = ""
         for option in selections:
             options = options + f"{int(selections.index(option))+1}) {option} "
@@ -37,7 +37,7 @@ def main():
         raw_selection = input("Please choose a option number:")
         selection = selections[int(raw_selection)-1].lower()
 
-        if selection == 'build':
+        if selection == 'settings':
             build_dirs()
             selection = None
 
@@ -53,15 +53,13 @@ def main():
             print("Goodbye")
             exit()
 
-        if selection == 'rename':
-            if crawl:
-                rename(crawl)
-            else:
-                print('No found selection')
-            selection = None
             
-            continue
-            
+'''
+Settings branch
+Build directory tree
+Store Library location
+Store favorites locations
+'''
 
 def build_dirs():
     raw = input("Absolute path or type 'back': ")
@@ -74,16 +72,24 @@ def build_dirs():
     try:
         os.makedirs(build_path)
     except OSError:
-        pass
+        print('Library already built')
+        built = True
 
-    for key in config.rom_groups.keys():
-        print(key)
-        try:
-            os.makedirs(build_path+'/'+str(key))
-        except OSError:
-            pass
+    if not built:
+        for key in config.rom_groups.keys():
+            print(key)
+            try:
+                os.makedirs(build_path+'/'+str(key))
+            except OSError:
+                pass
     
     return
+
+'''
+Main crawl functions
+Find by ext
+Find by named dir
+'''
     
 def find():
     '''Returns dictionary of lists.'''
