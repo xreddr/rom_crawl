@@ -20,16 +20,16 @@ def debug():
 
 
 class Scanner:
-    def __init__(self, dir, ext):
+    def __init__(self, dir, sys):
         self.dir = dir
-        self.ext = ext
+        self.sys = sys
 
     def search(self):
         '''Defines self.found as dictionary of lists'''
         found = {}
         for root, dirs, files in os.walk(self.dir):
             for file in files:
-                for ext in config.rom_groups['SNES']: # Hard coded
+                for ext in self.sys:
                     if file.endswith(ext):
                         key = os.path.dirname(os.path.join(root, file))
                         if key not in found:

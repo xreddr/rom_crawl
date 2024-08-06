@@ -1,1 +1,1 @@
-from . import search, jfs
+from . import search, jfs, files

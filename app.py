@@ -104,13 +104,21 @@ def find():
     elif favorites[int(select_fav)]:
         dir = favorites[int(select_fav)]
     
-    ext = None
     while dir == None:
         dir = input("Input absolute path:")
-    while ext == None:
-        ext = input("input extension:")
+    
+    key_list = []
+    for key in config.rom_groups.keys():
+        key_list.append(key)
+    options = ''
+    for option in key_list:
+        options = options + f"{int(key_list.index(option))+1}) {option} "
+    print(options)
+    raw_sys = input("Select numbered option:")
+    tmp_sys = int(raw_sys) - 1
+    sys = config.rom_groups[key_list[tmp_sys]]
 
-    s1 = src.search.Scanner(dir, ext)
+    s1 = src.search.Scanner(dir, sys)
     s1.search()
     print(json.dumps(s1.found, indent=2))
 
